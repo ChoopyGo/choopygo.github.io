@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ChoopyGO — กำลังจะมาเร็ว ๆ นี้ + Terminal เดโม</title>
-  <meta name="description" content="ChoopyGO แอปจองเรือและท่องเที่ยวทางทะเลในภูเก็ต เตรียมเปิดตัวเร็ว ๆ นี้ พร้อม Terminal เดโมให้ลองเล่น" />
+  <title>ChoopyGO — กำลังจะมาเร็ว ๆ นี้</title>
+  <meta name="description" content="ChoopyGO แอปจองเรือและท่องเที่ยวทางทะเลใน จ.ภูเก็ต เตรียมเปิดตัวเร็ว ๆ นี้" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -82,8 +82,7 @@
         <h1>กำลังจะมาเร็ว ๆ นี้</h1>
         <p class="lead">เรากำลังพัฒนาแอป <strong>ChoopyGO</strong> สำหรับการจองเรือและเดินทางทางน้ำในภูเก็ต ให้การเปรียบเทียบรอบ/ราคา/ผู้ประกอบการทำได้ง่าย โปร่งใส และเชื่อถือได้</p>
         <div class="cta">
-          <a class="btn primary" href="mailto:hello@choopygo.example?subject=Early%20Access">ลงทะเบียน Early Access</a>
-          <a class="btn" href="#terminal">ลองเล่น Terminal เดโม</a>
+          <a class="btn primary" href="mailto:info@choopygo.com?subject=Early%20Access">ลงทะเบียน Early Access</a>
         </div>
       </div>
     </section>
@@ -93,7 +92,7 @@
         <div class="terminal" role="application" aria-label="ChoopyGO interactive terminal">
           <div class="term-top">
             <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-            <div class="term-title">choopy@go: ~ / demo-terminal</div>
+            <div class="term-title">choopy@go: ~ /root</div>
             <div style="width:40px"></div>
           </div>
           <div id="screen" class="screen" tabindex="0" aria-live="polite"></div>
@@ -109,6 +108,10 @@
 
   <footer>
     <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-      <small>© <script src="assets/js/app.js"></script>
+      <small>© <span id="copyright-year"></span> ChoopyGO. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
 </body>
 </html>

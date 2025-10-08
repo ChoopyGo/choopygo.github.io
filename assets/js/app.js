@@ -111,7 +111,7 @@ const commands = {
   },
   contact() {
     return stream(
-      `ทีมงาน ChoopyGO:\n • อีเมล: <a href="mailto:hello@choopygo.example">hello@choopygo.example</a>\n • LINE: <a href="https://line.me/" target="_blank" rel="noopener">@choopygo</a>`,
+      `ทีมงาน ChoopyGO:\n • อีเมล: <a href="mailto:info@choopygo.com">info@choopygo.com</a>\n • LINE: <a href="https://line.me/" target="_blank" rel="noopener">@choopygo</a>`,
       { preserveHtml: true }
     );
   },
@@ -180,9 +180,12 @@ cli.addEventListener('keydown', async (e) => {
 
 screen.addEventListener('click', () => cli.focus());
 
+const yearLabel = document.getElementById('copyright-year');
+if (yearLabel) yearLabel.textContent = new Date().getFullYear();
+
 // Greeting (streamed)
 (async () => {
-  await stream('<span class="ok">ยินดีต้อนรับสู่ ChoopyGO (Coming Soon)</span> — เทอร์มินัลเดโมเพื่อสาธิตการใช้งาน', {
+  await stream('<span class="ok">ยินดีต้อนรับสู่ ChoopyGO (Coming Soon)</span>', {
     preserveHtml: true,
     delay: 10,
   });
