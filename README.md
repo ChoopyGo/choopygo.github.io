@@ -3,8 +3,6 @@
 > Landing page + Interactive Terminal Demo for **ChoopyGO**,  
 > a ferry booking and travel platform based in Phuket, Thailand.
 
-![ChoopyGO Logo](assets/img/logo.png)
-
 ---
 
 ## Contact Us
