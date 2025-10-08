@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChoopyGO — กำลังจะมาเร็ว ๆ นี้ + Terminal เดโม</title>
+  <meta name="description" content="ChoopyGO แอปจองเรือและท่องเที่ยวทางทะเลในภูเก็ต เตรียมเปิดตัวเร็ว ๆ นี้ พร้อม Terminal เดโมให้ลองเล่น" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1220; /* deep sea */
+      --panel:#0f172a; /* slate */
+      --text: #e5e7eb; /* foam */
+      --muted: #94a3b8;
+      --sea: #0ea5e9;  /* brand blue */
+      --emerald:#10b981; /* brand green */
+      --sand: #f5d27a; /* sand */
+      --coral:#fb7185; /* coral */
+      --border: rgba(148,163,184,.18);
+      --max: 960px;
+      --radius: 14px;
+    }
+    *{box-sizing:border-box}
+    body {
+      margin: 0;
+      background: radial-gradient(1000px 600px at 85% -10%, rgba(14,165,233,.15), transparent),
+        radial-gradient(1000px 800px at -10% -20%, rgba(16,185,129,.10), transparent), var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    a{color:var(--sea)} a:hover{text-decoration:underline}
+    .container{max-width:var(--max);margin:0 auto;padding:0 20px}
+    header{padding:22px 0;border-bottom:1px solid var(--border)}
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand img{width:48px;height:48px}
+    .hero{display:grid;gap:18px;grid-template-columns:96px 1fr;align-items:center;padding:34px 0}
+    @media (max-width:780px){.hero{grid-template-columns:1fr;text-align:center}.brand img{margin:0 auto}}
+    .logo-lg{width:160px;height:auto;margin:8px 0}
+    h1{font-size:clamp(2rem,5vw,3rem);margin:.2rem 0 6px;background: linear-gradient(90deg, var(--sea), var(--sand), var(--coral)); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .lead{color:var(--muted);font-size:1.1rem;max-width:720px}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-weight:700}
+    .btn.primary{background:linear-gradient(90deg,var(--emerald),var(--sea));color:#042018;border:none}
+
+    /* Terminal */
+    .section{padding:28px 0}
+    .terminal{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:0 20px 40px rgba(2,6,23,.25)}
+    .term-top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+    .dots{display:flex;gap:6px}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.red{background:#ef4444}.dot.yellow{background:#f59e0b}.dot.green{background:#10b981}
+    .term-title{font-family:"IBM Plex Mono", ui-monospace;font-size:.9rem;color:var(--muted)}
+    .screen{height:50vh;min-height:320px;max-height:560px;padding:14px;overflow:auto;scrollbar-width:thin}
+    .line{font-family:"IBM Plex Mono", ui-monospace; font-size:14px; line-height:1.6; white-space:pre-wrap; word-break:break-word}
+    .line .prompt{color:#00e6a0}
+    .line .cmd{color:var(--sand)}
+    .line .ok{color:var(--emerald)}
+    .line .warn{color:var(--sand)}
+    .line .err{color:var(--coral)}
+    .input-row{display:flex;gap:8px;align-items:center;padding:12px;border-top:1px solid var(--border);background:rgba(255,255,255,.02)}
+    .ps1{font-family:"IBM Plex Mono", ui-monospace;color:#00e6a0}
+    #cli{flex:1;border:0;background:transparent;color:var(--text);outline:none;font-family:"IBM Plex Mono", ui-monospace;font-size:15px}
+
+    footer{border-top:1px solid var(--border);color:var(--muted);padding:20px 0;margin-top:20px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <img src="assets/img/logo.png" alt="ChoopyGO logo">
+        <strong>ChoopyGO</strong>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <img src="assets/img/logo.png" alt="Mascot" class="logo-lg"/>
+      <div>
+        <h1>กำลังจะมาเร็ว ๆ นี้</h1>
+        <p class="lead">เรากำลังพัฒนาแอป <strong>ChoopyGO</strong> สำหรับการจองเรือและเดินทางทางน้ำในภูเก็ต ให้การเปรียบเทียบรอบ/ราคา/ผู้ประกอบการทำได้ง่าย โปร่งใส และเชื่อถือได้</p>
+        <div class="cta">
+          <a class="btn primary" href="mailto:hello@choopygo.example?subject=Early%20Access">ลงทะเบียน Early Access</a>
+          <a class="btn" href="#terminal">ลองเล่น Terminal เดโม</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="terminal" class="section">
+      <div class="container">
+        <div class="terminal" role="application" aria-label="ChoopyGO interactive terminal">
+          <div class="term-top">
+            <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="term-title">choopy@go: ~ / demo-terminal</div>
+            <div style="width:40px"></div>
+          </div>
+          <div id="screen" class="screen" tabindex="0" aria-live="polite"></div>
+          <div class="input-row">
+            <span class="ps1">choopygo$</span>
+            <input id="cli" aria-label="type command" autocomplete="off" spellcheck="false" autofocus />
+          </div>
+        </div>
+        <p class="lead" style="text-align:center;margin-top:10px">พิมพ์ <code>help</code> เพื่อดูคำสั่งที่ใช้ได้ — เดโมเท่านั้น ยังไม่เชื่อมต่อแบ็กเอนด์</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <small>© <script src="assets/js/app.js"></script>
+</body>
+</html>
