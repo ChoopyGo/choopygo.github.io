@@ -5,7 +5,7 @@ const cli = document.getElementById('cli');
 const state = {
   history: JSON.parse(localStorage.getItem('cg_history') || '[]'),
   hIndex: null,
-  vars: { from: 'Phuket', to: 'PhiPhi', pax: 2 },
+  game: null,
 };
 
 function appendLine(className = 'line') {
@@ -45,6 +45,17 @@ async function stream(text, { delay = 8, preserveHtml = false, className = 'line
   screen.scrollTop = screen.scrollHeight;
 }
 
+const miniGames = {
+  pearl: {
+    key: 'pearl',
+    title: 'Find your pearl of the sea',
+    shells: 5,
+    maxAttempts: 3,
+    description:
+      'เดาว่ามุกอยู่ในหอยหมายเลขใด (1-5) ภายใน 3 ครั้ง — พิมพ์ตัวเลขหรือ "quit" เพื่อยุติเกม',
+  },
+};
+
 const commands = {
   help() {
     return stream(
@@ -52,10 +63,7 @@ const commands = {
         [
           'help  — แสดงรายการคำสั่ง',
           'about — เกี่ยวกับ ChoopyGO และสถานะโปรเจกต์',
-          'routes — เส้นทางตัวอย่าง',
-          'set FROM TO [--pax N] [--date YYYY-MM-DD]',
-          'quote — ประเมินราคาคร่าว ๆ (เดโม)',
-          'notify EMAIL — ลงทะเบียนแจ้งเตือนเปิดตัว',
+          'game  — รายชื่อมินิเกม',
           'contact — ช่องทางติดต่อทีมงาน',
           'clear — ล้างหน้าจอ',
         ].join('\n')
@@ -63,55 +71,52 @@ const commands = {
   },
   about() {
     return stream(
-      'ChoopyGO กำลังพัฒนาเพื่อเป็นแพลตฟอร์มจองเรือในภูเก็ต\nช่วงนี้เป็นเดโมแบบไม่เชื่อมแบ็กเอนด์ — คุณสามารถใช้ notify เพื่อฝากอีเมลได้'
+      'ChoopyGO กำลังพัฒนาเพื่อเป็นแพลตฟอร์มจองเรือในภูเก็ต\nติดตามประกาศเปิดตัวจากเราได้เร็ว ๆ นี้'
     );
   },
-  routes() {
-    return stream(
-      'เส้นทางตัวอย่าง (MVP):\n - Phuket(Rassada) → Phi Phi (09:00, 13:30)\n - Phi Phi → Phuket (11:00, 16:00)'
-    );
-  },
-  set(args) {
-    if (!args.length) {
-      return stream('<span class="warn">usage:</span> set FROM TO [--pax N] [--date YYYY-MM-DD]', { preserveHtml: true });
+  async game(args) {
+    const pick = (args[0] || '').toLowerCase();
+    if (!pick || pick === 'list') {
+      const items = Object.values(miniGames).map((g) =>
+        `• <strong>${escapeHtml(g.title)}</strong> — พิมพ์ <code>game ${g.key}</code> เพื่อเริ่มเล่น`
+      );
+      const active = state.game
+        ? `<br><br>ขณะนี้คุณกำลังเล่น <strong>${escapeHtml(
+            miniGames[state.game.name]?.title || state.game.name
+          )}</strong> — พิมพ์ <code>quit</code> เพื่อออกจากเกม`
+        : '';
+      const body = items.length
+        ? `มินิเกมที่มีตอนนี้:<br>${items.join('<br>')}${active}`
+        : 'ยังไม่มีมินิเกมให้เล่นในตอนนี้';
+      return stream(body, { preserveHtml: true });
     }
-    state.vars.from = args[0];
-    state.vars.to = args[1] || state.vars.to;
-    const flags = parseFlags(args.slice(2));
-    if (flags.pax) state.vars.pax = Number(flags.pax);
-    if (flags.date) state.vars.date = flags.date;
+
+    const game = miniGames[pick];
+    if (!game) {
+      return stream(
+        `ยังไม่มีเกมชื่อ "${escapeHtml(pick)}" — พิมพ์ <code>game</code> เพื่อดูรายการ`,
+        { preserveHtml: true }
+      );
+    }
+
+    state.game = {
+      name: pick,
+      target: Math.floor(Math.random() * game.shells) + 1,
+      attempts: 0,
+      maxAttempts: game.maxAttempts,
+      shells: game.shells,
+    };
+
     return stream(
-      `ตั้งค่าเส้นทางแล้ว: <span class="ok">${state.vars.from} → ${state.vars.to}</span> pax=${state.vars.pax}${
-        state.vars.date ? ` date=${state.vars.date}` : ''
-      }`,
+      `🐚 <strong>${escapeHtml(game.title)}</strong><br>` +
+        `มุกถูกซ่อนไว้ในหอยหมายเลข 1-${game.shells}.<br>` +
+        `คุณมี ${game.maxAttempts} ครั้งในการเดา — พิมพ์ตัวเลขหรือ <code>quit</code> เพื่อยุติเกม`,
       { preserveHtml: true }
     );
-  },
-  quote() {
-    const base = 550; // THB, demo only
-    const distFactor =
-      state.vars.from.toLowerCase().includes('phuket') && state.vars.to.toLowerCase().includes('phi') ? 1.0 : 1.2;
-    const pax = Math.max(1, Number(state.vars.pax) || 1);
-    const price = Math.round(base * distFactor * pax);
-    return stream(
-      `ราคาประเมินคร่าว ๆ สำหรับ <span class="ok">${escapeHtml(state.vars.from)} → ${escapeHtml(
-        state.vars.to
-      )}</span> ผู้โดยสาร ${pax} คน ≈ <strong>${price} THB</strong> (เดโม)`,
-      { preserveHtml: true }
-    );
-  },
-  notify(args) {
-    const email = (args[0] || '').trim();
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      return stream('<span class="err">โปรดระบุอีเมลที่ถูกต้อง เช่น</span> notify you@example.com', { preserveHtml: true });
-    }
-    return stream(`ขอบคุณ! เราจะส่งอีเมลแจ้งเมื่อเปิดตัวอย่างเป็นทางการไปที่ <strong>${escapeHtml(email)}</strong>`, {
-      preserveHtml: true,
-    });
   },
   contact() {
     return stream(
-      `ทีมงาน ChoopyGO:\n • อีเมล: <a href="mailto:info@choopygo.com">info@choopygo.com</a>\n • LINE: <a href="https://line.me/" target="_blank" rel="noopener">@choopygo</a>`,
+      `ทีมงาน ChoopyGO:\n • อีเมล: <a href="mailto:info@choopygo.com">info@choopygo.com</a>`,
       { preserveHtml: true }
     );
   },
@@ -119,18 +124,6 @@ const commands = {
     screen.innerHTML = '';
   },
 };
-
-function parseFlags(arr) {
-  const out = {};
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].startsWith('--')) {
-      const key = arr[i].slice(2);
-      const val = i + 1 < arr.length && !arr[i + 1].startsWith('--') ? arr[++i] : true;
-      out[key] = val;
-    }
-  }
-  return out;
-}
 
 async function exec(raw) {
   const input = raw.trim();
@@ -144,9 +137,81 @@ async function exec(raw) {
     } catch (e) {
       println(`<span class='err'>error:</span> ${escapeHtml(e.message)}`);
     }
+  } else if (state.game) {
+    await handleGameInput(raw);
   } else {
     println(`<span class='err'>ไม่รู้จักคำสั่ง:</span> ${escapeHtml(name)} — พิมพ์ <code>help</code>`);
   }
+}
+
+async function handleGameInput(raw) {
+  if (!state.game) return;
+  if (state.game.name === 'pearl') {
+    await handlePearlGuess(raw);
+    return;
+  }
+
+  println(`<span class='err'>ระบบยังไม่รองรับเกมนี้</span>`);
+  state.game = null;
+}
+
+async function handlePearlGuess(raw) {
+  const config = miniGames.pearl;
+  if (!config) return;
+
+  const input = raw.trim().toLowerCase();
+  if (!input) {
+    await stream(`พิมพ์ตัวเลขระหว่าง 1-${config.shells} หรือ <code>quit</code> เพื่อออกจากเกม`, {
+      preserveHtml: true,
+    });
+    return;
+  }
+
+  if (['quit', 'exit', 'q'].includes(input)) {
+    state.game = null;
+    await stream('ยุติเกมแล้ว — พิมพ์ <code>game</code> เพื่อเลือกเล่นใหม่', { preserveHtml: true });
+    return;
+  }
+
+  const guess = Number(input);
+  if (!Number.isInteger(guess) || guess < 1 || guess > config.shells) {
+    await stream(`เลือกเลขระหว่าง 1-${config.shells} หรือพิมพ์ <code>quit</code> เพื่อออก`, {
+      preserveHtml: true,
+    });
+    return;
+  }
+
+  state.game.attempts += 1;
+
+  if (guess === state.game.target) {
+    await stream(
+      `<span class="ok">เยี่ยม!</span> คุณพบมุกในหอยหมายเลข ${guess} 🌊`,
+      { preserveHtml: true }
+    );
+    await stream('<span class="fireworks">🎆 ✨ 🎇 ✨ 🎆</span>', {
+      preserveHtml: true,
+      delay: 6,
+    });
+    await stream('คลื่นกำลังเฉลิมฉลอง! พิมพ์ <code>game pearl</code> เพื่อเล่นอีกครั้ง', {
+      preserveHtml: true,
+    });
+    state.game = null;
+    return;
+  }
+
+  const remaining = state.game.maxAttempts - state.game.attempts;
+  if (remaining <= 0) {
+    const answer = state.game.target;
+    state.game = null;
+    await stream(
+      `คลื่นสงบลง... มุกอยู่ในหอยหมายเลข ${answer}. ลองใหม่อีกครั้งด้วย <code>game pearl</code>`,
+      { preserveHtml: true }
+    );
+    return;
+  }
+
+  const hint = guess < state.game.target ? 'ดูเหมือนมุกจะอยู่เลขที่สูงกว่านี้' : 'คลื่นกระซิบว่าเลขที่ต่ำกว่านี้';
+  await stream(`ยังไม่พบมุก... ${hint} (เหลืออีก ${remaining} ครั้ง)`, { preserveHtml: true });
 }
 
 // History + keyboard handlers + autocomplete
@@ -189,7 +254,7 @@ if (yearLabel) yearLabel.textContent = new Date().getFullYear();
     preserveHtml: true,
     delay: 10,
   });
-  await stream('เริ่มจากพิมพ์ <code>help</code> หรือทดลอง <code>routes</code>, <code>quote</code>, <code>notify you@example.com</code>', {
+  await stream('เริ่มจากพิมพ์ <code>help</code> หรือทดลอง <code>game</code>, <code>contact</code>', {
     preserveHtml: true,
     delay: 10,
   });
