@@ -1,89 +1,644 @@
 <!doctype html>
 <html lang="th">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ChoopyGO — กำลังจะมาเร็ว ๆ นี้</title>
-  <meta name="description" content="ChoopyGO แอปจองเรือและท่องเที่ยวทางทะเลใน จ.ภูเก็ต เตรียมเปิดตัวเร็ว ๆ นี้" />
+  <meta name="description" content="ChoopyGO แอปจองตั๋วเรือ จ.ภูเก็ต เตรียมเปิดตัวเร็ว ๆ นี้" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth
+    }
+
     :root {
-      --bg: #0b1220; /* deep sea */
-      --panel:#0f172a; /* slate */
-      --text: #e5e7eb; /* foam */
+      --bg: #0b1220;
+      /* deep sea */
+      --panel: #0f172a;
+      /* slate */
+      --text: #e5e7eb;
+      /* foam */
       --muted: #94a3b8;
-      --sea: #0ea5e9;  /* brand blue */
-      --emerald:#10b981; /* brand green */
-      --sand: #f5d27a; /* sand */
-      --coral:#fb7185; /* coral */
-      --border: rgba(148,163,184,.18);
+      --sea: #0ea5e9;
+      /* brand blue */
+      --emerald: #10b981;
+      /* brand green */
+      --sand: #f5d27a;
+      /* sand */
+      --coral: #fb7185;
+      /* coral */
+      --border: rgba(148, 163, 184, .18);
       --max: 960px;
       --radius: 14px;
     }
-    *{box-sizing:border-box}
+
+    * {
+      box-sizing: border-box
+    }
+
     body {
       margin: 0;
-      background: radial-gradient(1000px 600px at 85% -10%, rgba(14,165,233,.15), transparent),
-        radial-gradient(1000px 800px at -10% -20%, rgba(16,185,129,.10), transparent), var(--bg);
+      background: radial-gradient(1000px 600px at 85% -10%, rgba(14, 165, 233, .15), transparent),
+        radial-gradient(1000px 800px at -10% -20%, rgba(16, 185, 129, .10), transparent), var(--bg);
       color: var(--text);
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     }
-    a{color:var(--sea)} a:hover{text-decoration:underline}
-    .container{max-width:var(--max);margin:0 auto;padding:0 20px}
-    header{padding:22px 0;border-bottom:1px solid var(--border)}
-    .brand{display:flex;gap:10px;align-items:center}
-    .brand img{width:48px;height:48px}
-    .hero{display:grid;gap:18px;grid-template-columns:auto minmax(0,1fr);align-items:center;padding:34px 0}
-    @media (max-width:780px){.hero{grid-template-columns:1fr;text-align:center}.brand img{margin:0 auto}}
-    .logo-lg{width:160px;height:auto;margin:8px 0}
-    h1{font-size:clamp(2rem,5vw,3rem);margin:.2rem 0 6px;background: linear-gradient(90deg, var(--sea), var(--sand), var(--coral)); -webkit-background-clip:text; background-clip:text; color:transparent}
-    .lead{color:var(--muted);font-size:1.1rem;max-width:720px}
-    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-weight:700}
-    .btn.primary{background:linear-gradient(90deg,var(--emerald),var(--sea));color:#042018;border:none}
+
+    a {
+      color: var(--sea)
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 20px
+    }
+
+    header {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      transition: padding .3s ease, background .3s ease, box-shadow .3s ease
+    }
+
+    header.scrolled {
+      padding: 12px 0;
+      background: rgba(11, 18, 32, .95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(2, 6, 23, .3)
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 24px;
+      align-items: center
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: .95rem;
+      padding: 8px 0;
+      position: relative;
+      transition: color .3s ease
+    }
+
+    .nav-link:hover {
+      color: var(--sea);
+      text-decoration: none
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--sea), var(--emerald));
+      transition: width .3s ease
+    }
+
+    .nav-link:hover::after {
+      width: 100%
+    }
+
+    @media (max-width:768px) {
+      .nav-menu {
+        gap: 16px
+      }
+
+      .nav-link {
+        font-size: .85rem
+      }
+    }
+
+    .hero {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      padding: 34px 0
+    }
+
+    @media (max-width:780px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center
+      }
+
+      .brand img {
+        margin: 0 auto
+      }
+    }
+
+    .logo-lg {
+      width: 160px;
+      height: auto;
+      margin: 8px 0
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin: .2rem 0 6px;
+      background: linear-gradient(90deg, var(--sea), var(--sand), var(--coral));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 720px
+    }
+
+    .cta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .8rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, var(--emerald), var(--sea));
+      color: #042018;
+      border: none
+    }
 
     /* Terminal */
-    .section{padding:28px 0}
-    .terminal{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:0 20px 40px rgba(2,6,23,.25)}
-    .term-top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
-    .dots{display:flex;gap:6px}
-    .dot{width:10px;height:10px;border-radius:50%}
-    .dot.red{background:#ef4444}.dot.yellow{background:#f59e0b}.dot.green{background:#10b981}
-    .term-title{font-family:"IBM Plex Mono", ui-monospace;font-size:.9rem;color:var(--muted)}
-    .screen{height:50vh;min-height:320px;max-height:560px;padding:14px;overflow:auto;scrollbar-width:thin}
-    .line{font-family:"IBM Plex Mono", ui-monospace; font-size:14px; line-height:1.6; white-space:pre-wrap; word-break:break-word}
-    .line .prompt{color:#00e6a0}
-    .line .cmd{color:var(--sand)}
-    .line .ok{color:var(--emerald)}
-    .line .warn{color:var(--sand)}
-    .line .err{color:var(--coral)}
-    .input-row{display:flex;gap:8px;align-items:center;padding:12px;border-top:1px solid var(--border);background:rgba(255,255,255,.02)}
-    .ps1{font-family:"IBM Plex Mono", ui-monospace;color:#00e6a0}
-    #cli{flex:1;border:0;background:transparent;color:var(--text);outline:none;font-family:"IBM Plex Mono", ui-monospace;font-size:15px}
+    .section {
+      padding: 28px 0
+    }
 
-    .fireworks{display:inline-block;font-size:1.4rem;color:#facc15;text-shadow:0 0 12px rgba(250,204,21,.6);animation:fireworks-pop .55s ease-in-out infinite alternate}
-    @keyframes fireworks-pop{from{transform:translateY(0) scale(1)}to{transform:translateY(-6px) scale(1.05)}}
+    .terminal {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(2, 6, 23, .25)
+    }
 
-    footer{border-top:1px solid var(--border);color:var(--muted);padding:20px 0;margin-top:20px}
+    .term-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .03), transparent)
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%
+    }
+
+    .dot.red {
+      background: #ef4444
+    }
+
+    .dot.yellow {
+      background: #f59e0b
+    }
+
+    .dot.green {
+      background: #10b981
+    }
+
+    .term-title {
+      font-family: "IBM Plex Mono", ui-monospace;
+      font-size: .9rem;
+      color: var(--muted)
+    }
+
+    .screen {
+      height: 50vh;
+      min-height: 320px;
+      max-height: 560px;
+      padding: 14px;
+      overflow: auto;
+      scrollbar-width: thin
+    }
+
+    .line {
+      font-family: "IBM Plex Mono", ui-monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word
+    }
+
+    .line .prompt {
+      color: #00e6a0
+    }
+
+    .line .cmd {
+      color: var(--sand)
+    }
+
+    .line .ok {
+      color: var(--emerald)
+    }
+
+    .line .warn {
+      color: var(--sand)
+    }
+
+    .line .err {
+      color: var(--coral)
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02)
+    }
+
+    .ps1 {
+      font-family: "IBM Plex Mono", ui-monospace;
+      color: #00e6a0
+    }
+
+    #cli {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      outline: none;
+      font-family: "IBM Plex Mono", ui-monospace;
+      font-size: 15px
+    }
+
+    .fireworks {
+      display: inline-block;
+      font-size: 1.4rem;
+      color: #facc15;
+      text-shadow: 0 0 12px rgba(250, 204, 21, .6);
+      animation: fireworks-pop .55s ease-in-out infinite alternate
+    }
+
+    @keyframes fireworks-pop {
+      from {
+        transform: translateY(0) scale(1)
+      }
+
+      to {
+        transform: translateY(-6px) scale(1.05)
+      }
+    }
+
+    .timeline-title {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      text-align: center;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, var(--sea), var(--emerald));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    .timeline-lead {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 50px
+    }
+
+    .timeline-container {
+      position: relative;
+      padding: 60px 20px
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--sea) 0%, var(--emerald) 33%, var(--sand) 66%, var(--coral) 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 20px rgba(14, 165, 233, .4)
+    }
+
+    .timeline-item {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all .8s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .timeline-item:nth-child(1) {
+      transition-delay: .1s
+    }
+
+    .timeline-item:nth-child(2) {
+      transition-delay: .2s
+    }
+
+    .timeline-item:nth-child(3) {
+      transition-delay: .3s
+    }
+
+    .timeline-item:nth-child(4) {
+      transition-delay: .4s
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: var(--panel);
+      border: 4px solid var(--sea);
+      border-radius: 50%;
+      z-index: 1
+    }
+
+    .timeline-item:nth-child(1) .timeline-marker {
+      border-color: var(--sea);
+      box-shadow: 0 0 15px rgba(14, 165, 233, .5)
+    }
+
+    .timeline-item:nth-child(2) .timeline-marker {
+      border-color: var(--emerald);
+      box-shadow: 0 0 15px rgba(16, 185, 129, .5)
+    }
+
+    .timeline-item:nth-child(3) .timeline-marker {
+      border-color: var(--sand);
+      box-shadow: 0 0 15px rgba(245, 210, 122, .5)
+    }
+
+    .timeline-item:nth-child(4) .timeline-marker {
+      border-color: var(--coral);
+      box-shadow: 0 0 15px rgba(251, 113, 133, .5)
+    }
+
+    .timeline-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      max-width: 400px;
+      position: relative;
+      transition: transform .3s ease, box-shadow .3s ease
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(2, 6, 23, .4);
+      border-color: rgba(148, 163, 184, .3)
+    }
+
+    .timeline-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px
+    }
+
+    .timeline-quarter-badge {
+      font-family: "IBM Plex Mono", ui-monospace;
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid var(--border)
+    }
+
+    .timeline-item:nth-child(1) .timeline-quarter-badge {
+      color: var(--sea);
+      border-color: rgba(14, 165, 233, .3)
+    }
+
+    .timeline-item:nth-child(2) .timeline-quarter-badge {
+      color: var(--emerald);
+      border-color: rgba(16, 185, 129, .3)
+    }
+
+    .timeline-item:nth-child(3) .timeline-quarter-badge {
+      color: var(--sand);
+      border-color: rgba(245, 210, 122, .3)
+    }
+
+    .timeline-item:nth-child(4) .timeline-quarter-badge {
+      color: var(--coral);
+      border-color: rgba(251, 113, 133, .3)
+    }
+
+    .timeline-year {
+      font-size: .85rem;
+      color: var(--muted)
+    }
+
+    .timeline-title-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text)
+    }
+
+    .timeline-bilingual {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .timeline-th {
+      font-size: .95rem;
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .timeline-en {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      font-style: italic
+    }
+
+    .timeline-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .timeline-bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .9rem;
+      line-height: 1.5
+    }
+
+    .timeline-bullet::before {
+      content: "";
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      background: var(--sea);
+      border-radius: 50%;
+      margin-top: 7px
+    }
+
+    .timeline-item:nth-child(1) .timeline-bullet::before {
+      background: var(--sea)
+    }
+
+    .timeline-item:nth-child(2) .timeline-bullet::before {
+      background: var(--emerald)
+    }
+
+    .timeline-item:nth-child(3) .timeline-bullet::before {
+      background: var(--sand)
+    }
+
+    .timeline-item:nth-child(4) .timeline-bullet::before {
+      background: var(--coral)
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+      text-align: right;
+      order: 1;
+      padding-right: 50px
+    }
+
+    .timeline-item:nth-child(even) .timeline-content {
+      text-align: left;
+      order: 2;
+      padding-left: 50px
+    }
+
+    .timeline-item:nth-child(odd) .timeline-empty {
+      order: 2;
+      flex: 1
+    }
+
+    .timeline-item:nth-child(even) .timeline-empty {
+      order: 1;
+      flex: 1
+    }
+
+    @media (max-width:768px) {
+      .timeline-line {
+        left: 30px
+      }
+
+      .timeline-item {
+        flex-direction: column;
+        margin-bottom: 60px
+      }
+
+      .timeline-marker {
+        left: 30px
+      }
+
+      .timeline-content {
+        text-align: left !important;
+        padding-left: 70px !important;
+        padding-right: 0 !important;
+        width: 100%;
+        max-width: 100%
+      }
+
+      .timeline-item:nth-child(odd) .timeline-content,
+      .timeline-item:nth-child(even) .timeline-content {
+        order: 2
+      }
+
+      .timeline-empty {
+        display: none
+      }
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      padding: 20px 0;
+      margin-top: 20px
+    }
   </style>
 </head>
+
 <body>
   <header>
-    <div class="container">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center">
       <div class="brand">
         <img src="assets/img/logo.png" alt="ChoopyGO logo">
         <strong>ChoopyGO</strong>
       </div>
+      <nav class="nav-menu">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#timeline" class="nav-link">Timeline</a>
+      </nav>
     </div>
   </header>
 
   <main>
     <section class="container hero">
-      <img src="assets/img/logo.png" alt="Mascot" class="logo-lg"/>
+      <img src="assets/img/logo.png" alt="Mascot" class="logo-lg" />
       <div>
         <h1>กำลังจะมาเร็ว ๆ นี้</h1>
-        <p class="lead">เรากำลังพัฒนาแอป <strong>ChoopyGO</strong> สำหรับการจองเรือและเดินทางทางน้ำใน จ.ภูเก็ต ให้การเปรียบเทียบรอบเรือ ราคา ผู้ประกอบการ ทำได้อย่างง่ายดาย โปร่งใส และเชื่อถือได้</p>
+        <p class="lead">เรากำลังพัฒนาแอป <strong>ChoopyGO</strong> สำหรับการจองตั๋วเรือสำหรับเดินทางทางน้ำใน จ.ภูเก็ต
+          ให้การเปรียบเทียบรอบเรือ ราคา ผู้ประกอบการ ทำได้อย่างง่ายดาย ที่ปลอดภัย โปร่งใส และเชื่อถือได้</p>
         <div class="cta">
           <a class="btn primary" href="mailto:info@choopygo.com?subject=Early%20Access">ลงทะเบียน Early Access</a>
         </div>
@@ -94,7 +649,8 @@
       <div class="container">
         <div class="terminal" role="application" aria-label="ChoopyGO interactive terminal">
           <div class="term-top">
-            <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span
+                class="dot green"></span></div>
             <div class="term-title">choopy@go: ~ /root</div>
             <div style="width:40px"></div>
           </div>
@@ -107,14 +663,159 @@
         <p class="lead" style="margin-top:10px">พิมพ์ <code>help</code> เพื่อดูคำสั่งที่ใช้ได้</p>
       </div>
     </section>
+
+    <section id="timeline" class="section">
+      <div class="container">
+        <h2 class="timeline-title">เส้นทางการพัฒนา ChoopyGO</h2>
+        <p class="timeline-lead">Development Journey: Q4 2025 &rarr; Q3 2026</p>
+
+        <div class="timeline-container">
+          <div class="timeline-line"></div>
+
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-card">
+                <div class="timeline-card-header">
+                  <span class="timeline-quarter-badge">Q4 2025</span>
+                  <span class="timeline-year">2025</span>
+                </div>
+                <h3 class="timeline-title-text">
+                  <span class="timeline-th">แนวคิดและการออกแบบ</span>
+                </h3>
+                <div class="timeline-bilingual">
+                  <p class="timeline-en">Concept & Design</p>
+                </div>
+                <ul class="timeline-bullets">
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">วิจัยประสบการณ์ผู้ใช้สำหรับการจองเรือ</span>
+                    <span class="timeline-en">User experience research for ferry booking</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">วางแผนเส้นทางเดินเรือในจังหวัดภูเก็ต</span>
+                    <span class="timeline-en">Route mapping for Phuket ferry network</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">เริ่มติดต่อผู้ประกอบการเรือเพื่อความร่วมมือ</span>
+                    <span class="timeline-en">Partnership outreach to ferry operators</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="timeline-empty"></div>
+            <div class="timeline-marker"></div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-empty"></div>
+            <div class="timeline-content">
+              <div class="timeline-card">
+                <div class="timeline-card-header">
+                  <span class="timeline-quarter-badge">Q1 2026</span>
+                  <span class="timeline-year">2026</span>
+                </div>
+                <h3 class="timeline-title-text">
+                  <span class="timeline-th">พัฒนาระบบหลัก</span>
+                </h3>
+                <div class="timeline-bilingual">
+                  <p class="timeline-en">Core Development</p>
+                </div>
+                <ul class="timeline-bullets">
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">ออกแบบสถาปัตยกรรมระบบจองเรือ</span>
+                    <span class="timeline-en">Booking engine architecture</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">พัฒนากรอบการเชื่อมต่อกับผู้ประกอบการ</span>
+                    <span class="timeline-en">Operator integration framework</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">ออกแบบฐานข้อมูลระบบจองและการชำระเงิน</span>
+                    <span class="timeline-en">Database design for bookings and payments</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="timeline-marker"></div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-card">
+                <div class="timeline-card-header">
+                  <span class="timeline-quarter-badge">Q2 2026</span>
+                  <span class="timeline-year">2026</span>
+                </div>
+                <h3 class="timeline-title-text">
+                  <span class="timeline-th">ทดสอบระบบ Beta</span>
+                </h3>
+                <div class="timeline-bilingual">
+                  <p class="timeline-en">Beta Testing</p>
+                </div>
+                <ul class="timeline-bullets">
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">เปิดทดสอบกับผู้ประกอบการเรือที่คัดสรร</span>
+                    <span class="timeline-en">Closed beta with select ferry operators</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">ทดสอบจริงบนเส้นทางหลักของภูเก็ต</span>
+                    <span class="timeline-en">Real-world testing on key routes</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">ปรับปรุงประสบการณ์ผู้ใช้ตามผลตอบรับ</span>
+                    <span class="timeline-en">UX improvements based on feedback</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="timeline-empty"></div>
+            <div class="timeline-marker"></div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-empty"></div>
+            <div class="timeline-content">
+              <div class="timeline-card">
+                <div class="timeline-card-header">
+                  <span class="timeline-quarter-badge">Q3 2026</span>
+                  <span class="timeline-year">2026</span>
+                </div>
+                <h3 class="timeline-title-text">
+                  <span class="timeline-th">เปิดตัว ChoopyGO (Go Live)</span>
+                </h3>
+                <div class="timeline-bilingual">
+                  <p class="timeline-en">Public Launch</p>
+                </div>
+                <ul class="timeline-bullets">
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">เปิดให้ใช้งานระบบเต็มรูปแบบ</span>
+                    <span class="timeline-en">Full platform release</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">แคมเปญการตลาดและการรับสมัครผู้ใช้</span>
+                    <span class="timeline-en">Marketing campaign and user onboarding</span>
+                  </li>
+                  <li class="timeline-bullet">
+                    <span class="timeline-th">ขยายความร่วมมือกับผู้ประกอบการเรือทั่วภูเก็ต</span>
+                    <span class="timeline-en">Expand partnerships across Phuket</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="timeline-marker"></div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="container"
+      style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
       <small>© <span id="copyright-year"></span> ChoopyGO. All rights reserved.</small>
     </div>
   </footer>
 
   <script src="assets/js/app.js"></script>
 </body>
+
 </html>

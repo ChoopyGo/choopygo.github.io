@@ -71,7 +71,15 @@ const commands = {
   },
   about() {
     return stream(
-      'ChoopyGO กำลังพัฒนาเพื่อเป็นแพลตฟอร์มจองเรือในภูเก็ต\nติดตามประกาศเปิดตัวจากเราได้เร็ว ๆ นี้'
+      '<span class="ok">🌊 เกี่ยวกับ ChoopyGO</span>\n\n' +
+      'แพลตฟอร์มจองเรือที่โปร่งใส เชื่อถือได้ สำหรับเกาะภูเก็ต\n\n' +
+      '📅 Timeline การพัฒนา:\n' +
+      '   Q4 2025 — Concept & Design (แนวคิดและการออกแบบ)\n' +
+      '   Q1 2026 — Core Development (พัฒนาระบบหลัก)\n' +
+      '   Q2 2026 — Beta Testing (ทดสอบระบบเบต้า)\n' +
+      '   Q3 2026 — Public Launch (เปิดตัวสู่สาธารณะ)\n\n' +
+      'เลื่อนลงด้านล่างเพื่อดู Timeline แบบ interactive ↓',
+      { preserveHtml: true }
     );
   },
   async game(args) {
@@ -247,6 +255,27 @@ screen.addEventListener('click', () => cli.focus());
 
 const yearLabel = document.getElementById('copyright-year');
 if (yearLabel) yearLabel.textContent = new Date().getFullYear();
+
+const header = document.querySelector('header');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.timeline-item').forEach(item => {
+  observer.observe(item);
+});
 
 // Greeting (streamed)
 (async () => {
